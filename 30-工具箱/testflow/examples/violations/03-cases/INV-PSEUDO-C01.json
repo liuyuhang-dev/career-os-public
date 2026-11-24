@@ -1,0 +1,30 @@
+{
+  "_comment": "故意违规:期望涉及重复支付,但没有任何故障注入,靠『连续点击 10 次』冒充 —— 伪覆盖。",
+  "id": "INV-PSEUDO-C01",
+  "spec": "specs/bad2.md",
+  "title": "用连续点击模拟重复支付",
+  "type": "device-android",
+  "priority": "P0",
+  "expect_source": "invariant",
+  "req_refs": [],
+  "judge": "vision-closed",
+  "review": { "state": "approved", "by": "someone", "at": "2026-09-18T10:00:00+08:00", "note": null },
+  "device": { "profile": "android-mid", "resolution": [1080, 2400], "dpi": 480 },
+  "preconditions": [{ "id": "PRE-1", "action": "launch_host", "host": "wechat" }],
+  "steps": [
+    { "id": "S1", "action": "tap", "target": { "anchor": { "text": "商城" } } },
+    { "id": "S2", "action": "tap", "target": { "norm": [0.5, 0.55] }, "note": "连续点击 10 次" },
+    { "id": "S3", "action": "screenshot", "name": "after" }
+  ],
+  "checks": [
+    {
+      "source": "E1",
+      "kind": "assert",
+      "mode": "vision-closed",
+      "question": "顶部金币数值是否显示为不含「-」号的整数?",
+      "region": [0.0, 0.0, 0.4, 0.08],
+      "answer": "yes"
+    }
+  ],
+  "evidence": ["screenshot"]
+}

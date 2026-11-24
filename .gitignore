@@ -1,0 +1,59 @@
+# ---- 密钥与凭据：绝对不进库 ----
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa*
+id_ed25519*
+*.kdbx
+.env
+.env.*
+!*.env.example
+*secret*
+*token*
+*password*
+*credentials*
+
+# ---- 会话与本地状态 ----
+.zcode/
+.codex/
+.claude/
+.axiom/
+*.sqlite
+*.sqlite3
+*.db
+*.log
+
+# ---- 大文件与二进制 ----
+*.zip
+*.7z
+*.rar
+*.tar
+*.gz
+*.apk
+*.aab
+*.ipa
+*.exe
+*.msi
+*.dmg
+*.mp4
+*.mov
+*.psd
+*.fig
+*.unitypackage
+
+# ---- 系统 ----
+Thumbs.db
+desktop.ini
+.DS_Store
+~$*
+
+# ---- 临时 ----
+tmp/
+temp/
+.cache/
+node_modules/
+__pycache__/
+*.pyc

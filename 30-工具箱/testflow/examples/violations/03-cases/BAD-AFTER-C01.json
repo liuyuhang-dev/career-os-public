@@ -1,0 +1,40 @@
+{
+  "_comment": "故意违规:after 指向不存在的步骤(证据永远绑不上,判定会静默退化成 blocked);另一条 vision-closed 缺 after 同理。这两类错误以前没有任何机制能发现。",
+  "id": "BAD-AFTER-C01",
+  "spec": "specs/bad3.md",
+  "title": "故意违规之三:判定项的 after 指错地方",
+  "type": "device-android",
+  "priority": "P2",
+  "expect_source": "requirement",
+  "req_refs": [],
+  "judge": "vision-closed",
+  "review": { "state": "approved", "by": "fixture", "at": "2026-09-18T00:00:00+08:00", "note": null },
+  "device": { "profile": "android-mid", "resolution": [1080, 2400], "dpi": 480 },
+  "preconditions": [
+    { "id": "PRE-1", "action": "launch_host" }
+  ],
+  "steps": [
+    { "id": "S1", "action": "tap", "target": { "norm": [0.5, 0.91] } },
+    { "id": "S2", "action": "screenshot", "name": "after-buy" }
+  ],
+  "checks": [
+    {
+      "source": "E1",
+      "after": "S9",
+      "kind": "assert",
+      "mode": "vision-closed",
+      "question": "顶部金币数值是否显示为不含「-」号且不含非数字字符的整数?",
+      "region": [0.0, 0.0, 0.4, 0.08],
+      "answer": "yes"
+    },
+    {
+      "source": "E2",
+      "kind": "assert",
+      "mode": "vision-closed",
+      "question": "屏幕中央是否出现包含「购买成功」字样的提示?",
+      "region": [0.15, 0.4, 0.85, 0.65],
+      "answer": "yes"
+    }
+  ],
+  "evidence": ["screenshot"]
+}

@@ -1,0 +1,273 @@
+[
+  {
+    "purpose": "wait_for",
+    "step": "PRE-3",
+    "question": "屏幕上是否已处于微信首页(可见底部导航栏)?",
+    "region": [
+      0.0,
+      0.85,
+      1.0,
+      1.0
+    ],
+    "timeout_ms": 30000,
+    "note": "入口由人工/预置方式完成后,先确认已回到宿主首页再继续;答否则后面步骤全不可信",
+    "top_level": true,
+    "caseId": "REQ-SETTLE-C01",
+    "mode": "state-report",
+    "exploreMode": false
+  },
+  {
+    "purpose": "locate_anchor",
+    "step": "S1",
+    "question": "屏幕上是否可见包含「开始游戏」字样的元素?",
+    "region": [
+      0.0,
+      0.78,
+      1.0,
+      1.0
+    ],
+    "note": "定位后按其中心 + offset 换算点击坐标",
+    "top_level": true,
+    "caseId": "REQ-SETTLE-C01",
+    "mode": "state-report",
+    "exploreMode": false
+  },
+  {
+    "purpose": "wait_for",
+    "step": "S2",
+    "question": "屏幕上是否出现包含「结算」字样的元素?",
+    "region": [
+      0.0,
+      0.0,
+      1.0,
+      1.0
+    ],
+    "timeout_ms": 180000,
+    "note": "轮询此封闭问题直到为 yes 或超时",
+    "top_level": true,
+    "caseId": "REQ-SETTLE-C01",
+    "mode": "state-report",
+    "exploreMode": false
+  },
+  {
+    "purpose": "wait_for",
+    "step": "PRE-2",
+    "question": "屏幕上是否已处于微信首页(可见底部导航栏)?",
+    "region": [
+      0.0,
+      0.85,
+      1.0,
+      1.0
+    ],
+    "timeout_ms": 30000,
+    "note": "入口由人工/预置方式完成后,先确认已回到宿主首页再继续;答否则后面步骤全不可信",
+    "top_level": true,
+    "caseId": "REQ-NET-C01",
+    "mode": "state-report",
+    "exploreMode": false
+  },
+  {
+    "purpose": "locate_anchor",
+    "step": "S1",
+    "question": "屏幕上是否可见包含「开始游戏」字样的元素?",
+    "region": [
+      0.0,
+      0.78,
+      1.0,
+      1.0
+    ],
+    "note": "定位后按其中心 + offset 换算点击坐标",
+    "top_level": true,
+    "caseId": "REQ-NET-C01",
+    "mode": "state-report",
+    "exploreMode": false
+  },
+  {
+    "purpose": "wait_for",
+    "step": "S5",
+    "question": "屏幕上是否出现包含「重连成功」字样的提示?",
+    "region": [
+      0.0,
+      0.3,
+      1.0,
+      0.7
+    ],
+    "timeout_ms": 30000,
+    "note": "轮询此封闭问题直到为 yes 或超时",
+    "top_level": true,
+    "caseId": "REQ-NET-C01",
+    "mode": "state-report",
+    "exploreMode": false
+  },
+  {
+    "purpose": "convergence",
+    "question": "游戏是否已上报重连完成信号(session.state=connected 且 pendingOps 为空)?",
+    "note": "等到该信号出现再继续;等到超时则整条用例的相关判定应为 blocked,不能按固定时长 sleep 之后就当收敛了",
+    "top_level": true,
+    "caseId": "REQ-NET-C01",
+    "mode": "state-report",
+    "exploreMode": false
+  },
+  {
+    "purpose": "wait_for",
+    "step": "PRE-2",
+    "question": "屏幕上是否已处于微信首页(可见底部导航栏)?",
+    "region": [
+      0.0,
+      0.85,
+      1.0,
+      1.0
+    ],
+    "timeout_ms": 30000,
+    "note": "入口由人工/预置方式完成后,先确认已回到宿主首页再继续;答否则后面步骤全不可信",
+    "top_level": true,
+    "caseId": "INV-COIN-C01",
+    "mode": "vision-closed",
+    "exploreMode": false
+  },
+  {
+    "purpose": "locate_anchor",
+    "step": "S1",
+    "question": "屏幕上是否可见包含「商城」字样的元素?",
+    "region": [
+      0.7,
+      0.85,
+      1.0,
+      1.0
+    ],
+    "note": "定位后按其中心 + offset 换算点击坐标",
+    "top_level": true,
+    "caseId": "INV-COIN-C01",
+    "mode": "vision-closed",
+    "exploreMode": false
+  },
+  {
+    "purpose": "vision-closed",
+    "source": "E1",
+    "question": "顶部金币数值是否显示为不含「-」号且不含非数字字符的整数?",
+    "region": [
+      0.0,
+      0.0,
+      0.4,
+      0.08
+    ],
+    "expectedAnswer": "yes",
+    "evidenceRequired": [
+      "screenshot"
+    ],
+    "caseId": "INV-COIN-C01",
+    "mode": "vision-closed",
+    "exploreMode": false
+  },
+  {
+    "purpose": "vision-closed",
+    "source": "E2",
+    "question": "屏幕中央是否出现包含「金币不足」字样的提示?",
+    "region": [
+      0.15,
+      0.4,
+      0.85,
+      0.65
+    ],
+    "expectedAnswer": "yes",
+    "evidenceRequired": [
+      "screenshot"
+    ],
+    "caseId": "INV-COIN-C01",
+    "mode": "vision-closed",
+    "exploreMode": false
+  },
+  {
+    "purpose": "wait_for",
+    "step": "PRE-2",
+    "question": "屏幕上是否已处于微信首页(可见底部导航栏)?",
+    "region": [
+      0.0,
+      0.85,
+      1.0,
+      1.0
+    ],
+    "timeout_ms": 30000,
+    "note": "入口由人工/预置方式完成后,先确认已回到宿主首页再继续;答否则后面步骤全不可信",
+    "top_level": true,
+    "caseId": "INV-IDEM-C01",
+    "mode": "state-report",
+    "exploreMode": false
+  },
+  {
+    "purpose": "locate_anchor",
+    "step": "PRE-3",
+    "question": "屏幕上是否可见包含「商城」字样的元素?",
+    "region": [
+      0.7,
+      0.85,
+      1.0,
+      1.0
+    ],
+    "note": "定位后按其中心 + offset 换算点击坐标",
+    "top_level": true,
+    "caseId": "INV-IDEM-C01",
+    "mode": "state-report",
+    "exploreMode": false
+  },
+  {
+    "purpose": "convergence",
+    "question": "游戏是否已上报重连完成信号(session.state=connected 且 pendingOps 为空)?",
+    "note": "等到该信号出现再继续;等到超时则整条用例的相关判定应为 blocked,不能按固定时长 sleep 之后就当收敛了",
+    "top_level": true,
+    "caseId": "INV-IDEM-C01",
+    "mode": "state-report",
+    "exploreMode": false
+  },
+  {
+    "purpose": "wait_for",
+    "step": "PRE-2",
+    "question": "屏幕上是否已处于微信首页(可见底部导航栏)?",
+    "region": [
+      0.0,
+      0.85,
+      1.0,
+      1.0
+    ],
+    "timeout_ms": 30000,
+    "note": "入口由人工/预置方式完成后,先确认已回到宿主首页再继续;答否则后面步骤全不可信",
+    "top_level": true,
+    "caseId": "EXP-COIN-C01",
+    "mode": "explore",
+    "exploreMode": true
+  },
+  {
+    "purpose": "locate_anchor",
+    "step": "S1",
+    "question": "屏幕上是否可见包含「商城」字样的元素?",
+    "region": [
+      0.7,
+      0.85,
+      1.0,
+      1.0
+    ],
+    "note": "定位后按其中心 + offset 换算点击坐标",
+    "top_level": true,
+    "caseId": "EXP-COIN-C01",
+    "mode": "explore",
+    "exploreMode": true
+  },
+  {
+    "purpose": "vision-closed",
+    "source": "E2",
+    "question": "顶部金币数值是否显示为不含「-」号且不含非数字字符的整数?",
+    "region": [
+      0.0,
+      0.0,
+      0.4,
+      0.08
+    ],
+    "expectedAnswer": "yes",
+    "evidenceRequired": [
+      "screenshot"
+    ],
+    "caseId": "EXP-COIN-C01",
+    "mode": "explore",
+    "exploreMode": true
+  }
+]

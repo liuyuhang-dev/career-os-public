@@ -1,0 +1,50 @@
+{
+  "id": "REQ-NET-C01",
+  "spec": "specs/game-demo.md",
+  "title": "弱网断线重连后状态收敛",
+  "type": "device-android",
+  "priority": "P0",
+  "expect_source": "requirement",
+  "req_refs": ["R-3.3"],
+  "judge": "state-report",
+  "review": { "state": "approved", "by": "liuyuhang", "at": "2026-09-17T10:00:00+08:00", "note": null },
+  "device": {
+    "profile": "android-mid",
+    "resolution": [1080, 2400],
+    "dpi": 480,
+    "host": "wechat",
+    "entry": "minigame-recent",
+    "appid": "wxXXXXXXXXXXXXXXXX",
+    "render_mode": "default"
+  },
+  "network": {
+    "profile": "weak",
+    "latency_ms": 800,
+    "jitter_ms": 300,
+    "loss_rate": 0.15,
+    "disconnect_after_ms": 5000,
+    "reconnect": true,
+    "assert_convergence": true
+  },
+  "determinism": { "seed": 20260917, "fixed_timestep_ms": 16, "disable_animations": true },
+  "preconditions": [
+    { "id": "PRE-1", "action": "launch_host", "host": "wechat" },
+    { "id": "PRE-2", "action": "open_entry", "entry": "minigame-recent", "appid": "wxXXXXXXXXXXXXXXXX" }
+  ],
+  "steps": [
+    { "id": "S1", "action": "tap", "target": { "anchor": { "text": "开始游戏", "region": [0.0, 0.78, 1.0, 1.0] } } },
+    { "id": "S2", "action": "network", "profile": "weak", "note": "设备侧 tc/netem 限速,通常需 root" },
+    { "id": "S3", "action": "wait", "ms": 5000 },
+    { "id": "S4", "action": "reset_network" },
+    { "id": "S5", "action": "wait_for", "question": "屏幕上是否出现包含「重连成功」字样的提示?", "region": [0.0, 0.3, 1.0, 0.7], "timeout_ms": 30000 },
+    { "id": "S6", "action": "screenshot", "name": "reconnected" }
+  ],
+  "checks": [
+    { "source": "E1", "after": "S5", "kind": "assert", "mode": "state-report", "path": "session.state", "op": "eq", "value": "connected" },
+    { "source": "E2", "after": "S5", "kind": "assert", "mode": "state-report", "path": "pendingOps", "op": "eq", "value": [] },
+    { "source": "E3", "after": "S5", "kind": "assert", "mode": "state-report", "path": "player.coin", "op": "eq", "value": 500 }
+  ],
+  "evidence": ["screenshot", "state_report", "logcat"],
+  "recorded_trace": null,
+  "notes": "iOS 侧无法精确限速,本用例仅在 Android 上结论有效"
+}

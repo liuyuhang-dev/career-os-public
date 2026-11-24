@@ -1,0 +1,29 @@
+{
+  "_comment": "故意违规:用了故障注入(后果在界面不可见),却只有 vision-closed 判定。",
+  "id": "INV-FAULTVIS-C01",
+  "spec": "specs/bad2.md",
+  "title": "故障注入但只有视觉判定",
+  "type": "device-android",
+  "priority": "P0",
+  "expect_source": "invariant",
+  "req_refs": [],
+  "judge": "vision-closed",
+  "review": { "state": "approved", "by": "someone", "at": "2026-09-18T10:00:00+08:00", "note": null },
+  "device": { "profile": "android-mid", "resolution": [1080, 2400], "dpi": 480 },
+  "preconditions": [{ "id": "PRE-1", "action": "launch_host", "host": "wechat" }],
+  "steps": [
+    { "id": "S1", "action": "tap", "target": { "norm": [0.5, 0.55] } },
+    { "id": "S2", "action": "fault", "kind": "drop_response", "after_step": "S1", "window_ms": 2000 }
+  ],
+  "checks": [
+    {
+      "source": "E1",
+      "kind": "assert",
+      "mode": "vision-closed",
+      "question": "顶部金币数值是否显示为不含「-」号的整数?",
+      "region": [0.0, 0.0, 0.4, 0.08],
+      "answer": "yes"
+    }
+  ],
+  "evidence": ["screenshot"]
+}

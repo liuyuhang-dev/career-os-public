@@ -1,0 +1,42 @@
+{
+  "_comment": "故意违规:期望来源是观察到的行为(非法);E1 缺 region;E9 是孤儿判定项;E2 是开放提问。",
+  "id": "BAD-OBSERVED-C01",
+  "spec": "specs/bad.md",
+  "title": "故意违规之一",
+  "type": "device-android",
+  "priority": "P1",
+  "expect_source": "observed",
+  "req_refs": [],
+  "judge": "vision-closed",
+  "review": { "state": "draft", "by": null, "at": null, "note": null },
+  "device": { "profile": "android-mid", "resolution": [1080, 2400], "dpi": 480 },
+  "steps": [
+    { "id": "S1", "action": "tap", "target": { "norm": [540, 2184] }, "note": "像素坐标,触发 PIXEL_COORDS 警告" }
+  ],
+  "checks": [
+    {
+      "source": "E1",
+      "kind": "assert",
+      "mode": "vision-closed",
+      "question": "顶部金币数值是否显示为不含「-」号的整数?",
+      "answer": "yes"
+    },
+    {
+      "source": "E2",
+      "kind": "assert",
+      "mode": "vision-closed",
+      "question": "商城页面是否显示正常?",
+      "region": [0.0, 0.0, 1.0, 1.0],
+      "answer": "yes"
+    },
+    {
+      "source": "E9",
+      "kind": "assert",
+      "mode": "state-report",
+      "path": "player.coin",
+      "op": "eq",
+      "value": 100
+    }
+  ],
+  "evidence": ["screenshot"]
+}

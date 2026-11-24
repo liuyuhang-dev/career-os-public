@@ -1,0 +1,64 @@
+{
+  "id": "INV-IDEM-C01",
+  "spec": "specs/game-demo.md",
+  "title": "支付响应丢失后的重试不得导致重复扣款与重复发货",
+  "type": "device-android",
+  "priority": "P0",
+  "expect_source": "invariant",
+  "req_refs": [],
+  "judge": "state-report",
+  "review": { "state": "approved", "by": "liuyuhang", "at": "2026-09-18T10:00:00+08:00", "note": null },
+  "device": {
+    "profile": "android-mid",
+    "resolution": [1080, 2400],
+    "dpi": 480,
+    "host": "wechat",
+    "entry": "minigame-recent",
+    "appid": "wxXXXXXXXXXXXXXXXX",
+    "render_mode": "default"
+  },
+  "network": {
+    "profile": "flaky",
+    "latency_ms": 800,
+    "jitter_ms": 300,
+    "loss_rate": 0.15,
+    "reconnect": true,
+    "assert_convergence": true
+  },
+  "determinism": { "seed": 20260917, "fixed_timestep_ms": 16, "disable_animations": true },
+  "preconditions": [
+    { "id": "PRE-1", "action": "launch_host", "host": "wechat" },
+    { "id": "PRE-2", "action": "open_entry", "entry": "minigame-recent", "appid": "wxXXXXXXXXXXXXXXXX" },
+    { "id": "PRE-3", "action": "tap", "target": { "anchor": { "text": "商城", "region": [0.7, 0.85, 1.0, 1.0] } } }
+  ],
+  "steps": [
+    { "id": "S1", "action": "tap", "target": { "norm": [0.5, 0.55] }, "note": "点击购买测试商品" },
+    {
+      "id": "S2",
+      "action": "fault",
+      "kind": "drop_response",
+      "after_step": "S1",
+      "delay_ms": 100,
+      "window_ms": 2000,
+      "note": "请求发出后、响应到达前切断下行 —— 这是真实重复支付的核心条件"
+    },
+    { "id": "S3", "action": "wait", "ms": 5000, "note": "等客户端超时重试与状态收敛" },
+    {
+      "id": "S4",
+      "action": "fault",
+      "kind": "kill_after_step",
+      "after_step": "S3",
+      "note": "重启客户端,验证未确认订单不会被重放成第二笔"
+    },
+    { "id": "S5", "action": "screenshot", "name": "after-retry" }
+  ],
+  "checks": [
+    { "source": "E1", "after": "S4", "kind": "assert", "mode": "state-report", "path": "order.chargeCount", "op": "eq", "value": 1 },
+    { "source": "E2", "after": "S4", "kind": "assert", "mode": "state-report", "path": "order.coinDelta", "op": "eq", "value": -100 },
+    { "source": "E3", "after": "S4", "kind": "assert", "mode": "state-report", "path": "player.itemA", "op": "eq", "value": 1 },
+    { "source": "E4", "after": "S4", "kind": "assert", "mode": "state-report", "path": "orders", "op": "unique_by", "value": "orderId" }
+  ],
+  "evidence": ["screenshot", "state_report", "logcat"],
+  "recorded_trace": null,
+  "notes": "E1-E3 用『精确等于单次值』而非『大于 0』—— 后者对重复支付完全无感。E4 验证订单表无重复记录。判定必须走 state-report,因为重复扣款在界面上不可见。"
+}

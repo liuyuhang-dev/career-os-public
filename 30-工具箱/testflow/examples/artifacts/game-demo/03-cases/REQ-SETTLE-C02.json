@@ -1,0 +1,34 @@
+{
+  "id": "REQ-SETTLE-C02",
+  "spec": "specs/game-demo.md",
+  "title": "击杀数不含召唤物",
+  "type": "device-ios",
+  "priority": "P2",
+  "expect_source": "requirement",
+  "req_refs": ["R-3.2"],
+  "judge": "state-report",
+  "review": { "state": "approved", "by": "liuyuhang", "at": "2026-09-17T10:00:00+08:00", "note": null },
+  "device": {
+    "profile": "iphone-14",
+    "resolution": [1170, 2532],
+    "dpi": 460,
+    "host": "wechat",
+    "entry": "minigame-recent",
+    "appid": "wxXXXXXXXXXXXXXXXX",
+    "render_mode": "default"
+  },
+  "determinism": { "seed": 20260917, "fixed_timestep_ms": 16, "disable_animations": true },
+  "preconditions": [
+    { "id": "PRE-1", "action": "launch_app", "package": "com.tencent.xin" }
+  ],
+  "steps": [
+    { "id": "S1", "action": "tap", "target": { "norm": [0.5, 0.91] }, "note": "iOS 投屏路径:归一化坐标,需先探测画面矩形" },
+    { "id": "S2", "action": "screenshot", "name": "settle" }
+  ],
+  "checks": [
+    { "source": "E1", "after": "S2", "kind": "assert", "mode": "state-report", "path": "player.killCount", "op": "eq", "value": 5 }
+  ],
+  "evidence": ["screenshot", "state_report"],
+  "recorded_trace": null,
+  "notes": "iOS 通道的执行器尚未实现,且爱思助手投屏可控性未验证"
+}

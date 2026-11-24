@@ -1,0 +1,24 @@
+{
+  "endpoint": "",
+  "model": "",
+  "api_key": "",
+  "api_key_env": "TESTFLOW_JUDGE_API_KEY",
+  "timeout_s": 60,
+  "temperature": 0,
+  "max_tokens": 512,
+  "max_images": 1,
+  "max_image_bytes": 8000000,
+  "crop_region": true,
+  "_note": [
+    "判定轮(scripts/judge.py)的视觉端点配置。必须是 OpenAI 兼容的 /chat/completions。",
+    "endpoint 留空 = 未配置 -> 判定轮把全部判定项记为 blocked(绝不猜、绝不伪装成 pass)。",
+    "endpoint 写法:填到 /v1 即可,脚本会补 /chat/completions;也可直接填完整的 /chat/completions。",
+    "密钥:优先用 api_key_env 指向的环境变量。api_key 字段留空 —— 这个文件随 skill 入库,",
+    "填进去等于把密钥提交上去。万一已经填过,先轮换密钥再删。",
+    "旧机器上实测可用过的是内网 http://<内网判定端点>/v1 + deepseek-flash(含图片输入)。",
+    "内网地址换机器基本不通,所以这里不写默认值 —— 写上去只会让人以为配好了。",
+    "crop_region: 按判定项的 region 裁剪截图后再送端点。关掉它等于让模型看整屏,",
+    "误判率会明显上升(见 references/4-conversion.md 的 region 要求)。",
+    "max_image_bytes: 单张截图超过这个字节数就不发送,该判定项记 blocked 并说明原因。"
+  ]
+}

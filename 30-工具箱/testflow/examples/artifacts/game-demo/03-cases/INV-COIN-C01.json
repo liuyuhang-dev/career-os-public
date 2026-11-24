@@ -1,0 +1,52 @@
+{
+  "id": "INV-COIN-C01",
+  "spec": "specs/game-demo.md",
+  "title": "金币余额不变负",
+  "type": "device-android",
+  "priority": "P1",
+  "expect_source": "invariant",
+  "req_refs": [],
+  "judge": "vision-closed",
+  "review": { "state": "approved", "by": "liuyuhang", "at": "2026-09-17T10:00:00+08:00", "note": null },
+  "device": {
+    "profile": "android-mid",
+    "resolution": [1080, 2400],
+    "dpi": 480,
+    "host": "wechat",
+    "entry": "minigame-recent",
+    "appid": "wxXXXXXXXXXXXXXXXX",
+    "render_mode": "default"
+  },
+  "preconditions": [
+    { "id": "PRE-1", "action": "launch_host", "host": "wechat" },
+    { "id": "PRE-2", "action": "open_entry", "entry": "minigame-recent", "appid": "wxXXXXXXXXXXXXXXXX" }
+  ],
+  "steps": [
+    { "id": "S1", "action": "tap", "target": { "anchor": { "text": "商城", "region": [0.7, 0.85, 1.0, 1.0] } } },
+    { "id": "S2", "action": "tap", "target": { "norm": [0.5, 0.55] }, "note": "任意标价道具" },
+    { "id": "S3", "action": "screenshot", "name": "shop-after-buy" }
+  ],
+  "checks": [
+    {
+      "source": "E1",
+      "after": "S3",
+      "kind": "assert",
+      "mode": "vision-closed",
+      "question": "顶部金币数值是否显示为不含「-」号且不含非数字字符的整数?",
+      "region": [0.0, 0.0, 0.4, 0.08],
+      "answer": "yes"
+    },
+    {
+      "source": "E2",
+      "after": "S3",
+      "kind": "assert",
+      "mode": "vision-closed",
+      "question": "屏幕中央是否出现包含「金币不足」字样的提示?",
+      "region": [0.15, 0.4, 0.85, 0.65],
+      "answer": "yes"
+    }
+  ],
+  "evidence": ["screenshot"],
+  "recorded_trace": null,
+  "notes": "不变量用例:金币不为负是任何游戏都应成立的性质,不依赖需求文档"
+}

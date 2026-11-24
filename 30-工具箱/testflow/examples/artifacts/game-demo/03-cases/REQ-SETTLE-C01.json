@@ -1,0 +1,38 @@
+{
+  "id": "REQ-SETTLE-C01",
+  "spec": "specs/game-demo.md",
+  "title": "结算页金币增量等于击杀数乘 10",
+  "type": "device-android",
+  "priority": "P1",
+  "expect_source": "requirement",
+  "req_refs": ["R-3.1"],
+  "judge": "state-report",
+  "review": { "state": "approved", "by": "liuyuhang", "at": "2026-09-17T10:00:00+08:00", "note": null },
+  "device": {
+    "profile": "android-mid",
+    "resolution": [1080, 2400],
+    "dpi": 480,
+    "host": "wechat",
+    "entry": "minigame-recent",
+    "appid": "wxXXXXXXXXXXXXXXXX",
+    "render_mode": "default"
+  },
+  "determinism": { "seed": 20260917, "fixed_timestep_ms": 16, "disable_animations": true },
+  "preconditions": [
+    { "id": "PRE-1", "action": "reset_network" },
+    { "id": "PRE-2", "action": "launch_host", "host": "wechat" },
+    { "id": "PRE-3", "action": "open_entry", "entry": "minigame-recent", "appid": "wxXXXXXXXXXXXXXXXX" }
+  ],
+  "steps": [
+    { "id": "S1", "action": "tap", "target": { "anchor": { "text": "开始游戏", "region": [0.0, 0.78, 1.0, 1.0] } }, "note": "主界面开始游戏" },
+    { "id": "S2", "action": "wait_for", "question": "屏幕上是否出现包含「结算」字样的元素?", "region": [0.0, 0.0, 1.0, 1.0], "timeout_ms": 180000 },
+    { "id": "S3", "action": "screenshot", "name": "settle" }
+  ],
+  "checks": [
+    { "source": "E1", "after": "S3", "kind": "assert", "mode": "state-report", "path": "player.coinDelta", "op": "eq", "value": 80 },
+    { "source": "E2", "after": "S3", "kind": "assert", "mode": "state-report", "path": "player.killCount", "op": "eq", "value": 8 }
+  ],
+  "evidence": ["screenshot", "state_report"],
+  "recorded_trace": null,
+  "notes": "期望值 80 来自需求 R-3.1 的公式(击杀数 × 10),不是从屏幕上观察到的"
+}

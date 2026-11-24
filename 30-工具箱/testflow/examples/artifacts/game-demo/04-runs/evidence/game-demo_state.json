@@ -1,0 +1,24 @@
+{
+  "_comment": "执行器采集到的客户端状态上报(fixture)。注意 order.* 与 orders 反映的是一个典型的『重复支付』缺陷:扣了两次款、只发了一次货、订单表有重复记录 —— 这三件事在界面上全都看不出来。",
+  "runId": "run-20260918-110000",
+  "caseId": "REQ-SETTLE-C01",
+  "player.coin": 500,
+  "player.coinDelta": 40,
+  "player.killCount": 8,
+  "player.level": 12,
+  "player.bag": [
+    { "id": "sword", "count": 1 },
+    { "id": "potion", "count": 5 }
+  ],
+  "player.itemA": 1,
+  "session.state": "connected",
+  "session.reconnects": 1,
+  "sync.lastSyncAt": 1758091200000,
+  "pendingOps": [],
+  "order.chargeCount": 2,
+  "order.coinDelta": -200,
+  "orders": [
+    { "orderId": "A1", "status": "paid", "amount": 100 },
+    { "orderId": "A1", "status": "paid", "amount": 100 }
+  ]
+}

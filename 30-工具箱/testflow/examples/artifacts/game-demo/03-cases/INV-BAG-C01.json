@@ -1,0 +1,91 @@
+{
+  "id": "INV-BAG-C01",
+  "spec": "specs/game-demo.md",
+  "title": "背包不出现重复条目",
+  "type": "device-android",
+  "priority": "P2",
+  "expect_source": "invariant",
+  "req_refs": [],
+  "judge": "state-report",
+  "review": {
+    "state": "draft",
+    "by": null,
+    "at": null,
+    "note": null
+  },
+  "device": {
+    "profile": "android-mid",
+    "resolution": [
+      1080,
+      2400
+    ],
+    "dpi": 480,
+    "host": "wechat",
+    "entry": "minigame-recent",
+    "appid": "wxXXXXXXXXXXXXXXXX",
+    "render_mode": "default"
+  },
+  "preconditions": [
+    {
+      "id": "PRE-1",
+      "action": "launch_host",
+      "host": "wechat"
+    },
+    {
+      "id": "PRE-2",
+      "action": "open_entry",
+      "entry": "minigame-recent",
+      "appid": "wxXXXXXXXXXXXXXXXX"
+    }
+  ],
+  "steps": [
+    {
+      "id": "S1",
+      "action": "tap",
+      "target": {
+        "anchor": {
+          "text": "邮件",
+          "region": [
+            0.0,
+            0.85,
+            0.3,
+            1.0
+          ]
+        }
+      }
+    },
+    {
+      "id": "S2",
+      "action": "tap",
+      "target": {
+        "norm": [
+          0.5,
+          0.5
+        ]
+      },
+      "note": "领取附件"
+    },
+    {
+      "id": "S3",
+      "action": "screenshot",
+      "name": "bag-after-claim"
+    }
+  ],
+  "checks": [
+    {
+      "source": "E1",
+      "after": "S3",
+      "kind": "assert",
+      "mode": "state-report",
+      "path": "player.bag",
+      "op": "unique_by",
+      "value": "id"
+    }
+  ],
+  "evidence": [
+    "screenshot",
+    "state_report"
+  ],
+  "recorded_trace": null,
+  "notes": "尚未复核,执行器应返回 blocked: not_reviewed"
+}

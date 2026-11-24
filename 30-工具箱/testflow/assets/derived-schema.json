@@ -1,0 +1,220 @@
+{
+  "_comment": "testflow 派生用例 schema。这是规范性参考文档;实际校验由 scripts/validate_cases.py 以纯标准库实现(不依赖 jsonschema),两者规则保持一致。字段说明见行内 _desc。",
+  "schema_version": "1.0",
+  "title": "testflow derived case",
+  "type": "object",
+  "required": ["id", "spec", "title", "type", "priority", "expect_source", "judge", "review", "steps", "checks"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^(REQ|INV|EXP|CONS)-[A-Za-z0-9_.-]+$",
+      "_desc": "用例 ID。REQ-<需求号>-C<序> 需求派生;INV-<类别>-C<序> 不变量;EXP-<序> 探索固化;CONS-<源对>-C<序> 源间一致性。前缀集合与 validate_cases.py 的 CASE_ID_PREFIXES 一致,check_docs.py 对账"
+    },
+    "spec": {
+      "type": "string",
+      "_desc": "来源自然语言用例文件路径,相对项目根。用于期望覆盖率校验"
+    },
+    "title": { "type": "string" },
+    "type": {
+      "enum": ["device-android", "device-ios", "device-cloud", "unity-headless", "backend-api", "manual"],
+      "_desc": "执行器路由键"
+    },
+    "priority": { "enum": ["P0", "P1", "P2", "P3"] },
+    "expect_source": {
+      "enum": ["requirement", "invariant", "config", "consistency"],
+      "_desc": "期望来源。`code` 与 `observed` 是明确禁止的 —— 代码只回答『测哪里』,不回答『应该是什么』;观察到的行为是实然,不是应然。见 references/10-upstreams.md"
+    },
+    "req_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": [],
+      "_desc": "指向 01-requirements.json 的 clause.id。expect_source=requirement 时必填,其他来源必须为空"
+    },
+    "config_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "_desc": "指向配置表与行,如 'configs/item.csv#row12'。expect_source=config 时必填"
+    },
+    "consistency_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "_desc": "指向要交叉比对的源对,如 'configs/item.csv × assets/icons/'。expect_source=consistency 时必填"
+    },
+    "judge": {
+      "enum": ["explore", "vision-closed", "replay", "state-report"],
+      "_desc": "判定模式。explore 不判通过/失败只报异常"
+    },
+    "review": {
+      "type": "object",
+      "required": ["state"],
+      "additionalProperties": false,
+      "properties": {
+        "state": { "enum": ["draft", "approved", "rejected"] },
+        "by": { "type": ["string", "null"] },
+        "at": { "type": ["string", "null"] },
+        "note": { "type": ["string", "null"] }
+      },
+      "_desc": "复核状态。非 approved 时执行器返回 blocked: not_reviewed"
+    },
+    "device": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "profile": { "type": "string", "_desc": "机型档位,配合 scripts/coordmap.py 使用" },
+        "resolution": { "type": "array", "items": { "type": "integer" } },
+        "dpi": { "type": "integer" },
+        "host": { "enum": ["wechat", "douyin", "standalone"] },
+        "entry": { "type": "string", "_desc": "游戏入口:minigame-recent / qr / deeplink / app" },
+        "appid": { "type": "string" },
+        "render_mode": { "enum": ["default", "high_perf", "high_perf_plus"] }
+      }
+    },
+    "network": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "profile": { "enum": ["online", "weak", "offline", "flaky"] },
+        "latency_ms": { "type": "integer" },
+        "jitter_ms": { "type": "integer" },
+        "loss_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "disconnect_after_ms": { "type": ["integer", "null"] },
+        "reconnect": { "type": "boolean" },
+        "assert_convergence": {
+          "type": "boolean",
+          "_desc": "断言重连后状态收敛。需客户端提供收敛完成信号,见 references/7-instrumentation.md"
+        }
+      },
+      "_desc": "弱网声明。iOS 侧只能代理近似限速,精度低于 Android,须在 notes 标注"
+    },
+    "determinism": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "seed": { "type": ["integer", "null"] },
+        "fixed_timestep_ms": { "type": ["integer", "null"] },
+        "disable_animations": { "type": "boolean" }
+      },
+      "_desc": "涉及游戏内状态的用例应声明,否则结果可能抖动(校验器发警告)"
+    },
+    "preconditions": { "type": "array", "items": { "$ref": "#/definitions/action" } },
+    "steps": { "type": "array", "items": { "$ref": "#/definitions/action" } },
+    "checks": { "type": "array", "items": { "$ref": "#/definitions/check" } },
+    "evidence": {
+      "type": "array",
+      "items": { "enum": ["screenshot", "trace", "logcat", "state_report", "perf", "crash"] },
+      "_desc": "需要采集的证据类型。证据缺失时判定只能是 blocked"
+    },
+    "recorded_trace": { "type": ["string", "null"], "_desc": "judge=replay 时的轨迹文件路径" },
+    "notes": { "type": ["string", "null"] }
+  },
+
+  "definitions": {
+    "action": {
+      "type": "object",
+      "required": ["action"],
+      "properties": {
+        "id": { "type": "string", "_desc": "PRE-N / S-N,断言用 after 引用" },
+        "action": {
+          "enum": [
+            "launch_host", "open_entry", "launch_app", "stop_app",
+            "tap", "swipe", "wait", "wait_for", "screenshot",
+            "logcat", "perf", "network", "reset_network", "replay", "adb_shell", "fault"
+          ]
+        },
+        "kind": {
+          "enum": ["drop_response", "delay_response", "kill_after_step",
+                   "offline_during_step", "replay_callback", "duplicate_request"],
+          "_desc": "action=fault 时必填。见 references/11-idempotency.md"
+        },
+        "after_step": { "type": "string", "_desc": "fault:在哪个步骤之后注入,必须存在于 steps" },
+        "around_step": { "type": "string", "_desc": "fault kind=offline_during_step" },
+        "target_step": { "type": "string", "_desc": "fault kind=duplicate_request" },
+        "target": { "_desc": "fault kind=replay_callback 的回调标识 / tap 的目标坐标" },
+        "times": { "type": "integer", "_desc": "fault:重复次数" },
+        "window_ms": { "type": "integer", "_desc": "fault kind=drop_response 的断网窗口" },
+        "delay_ms": { "type": "integer", "_desc": "fault:延迟毫秒" },
+        "duration_ms": { "type": "integer", "_desc": "fault kind=offline_during_step 的离线时长" },
+        "note": { "type": "string" },
+        "host": { "enum": ["wechat", "douyin"] },
+        "entry": { "type": "string" },
+        "appid": { "type": "string" },
+        "package": { "type": "string" },
+        "target": {
+          "type": "object",
+          "_desc": "tap 的目标。优先 anchor(锚点相对定位,跨机型更稳),其次 norm(归一化比例 0..1)",
+          "properties": {
+            "norm": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+            "anchor": {
+              "type": "object",
+              "properties": {
+                "text": { "type": "string", "_desc": "逐字取自 UI 元素词汇表" },
+                "region": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 }
+              }
+            },
+            "offset": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 }
+          }
+        },
+        "from": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+        "to": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+        "duration_ms": { "type": "integer" },
+        "ms": { "type": "integer" },
+        "question": { "type": "string" },
+        "region": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 },
+        "timeout_ms": { "type": "integer" },
+        "name": { "type": "string" },
+        "profile": { "type": "string" },
+        "trace": { "type": "string" },
+        "cmd": { "type": "string" }
+      }
+    },
+
+    "check": {
+      "type": "object",
+      "required": ["source", "kind"],
+      "properties": {
+        "source": {
+          "type": "string",
+          "pattern": "^E[0-9]+$",
+          "_desc": "对应的期望编号。覆盖率校验的唯一依据,不许编造"
+        },
+        "after": { "type": "string", "_desc": "观测哪个动作之后的状态,如 S1;vision-closed 与 judgment 必填,且必须指向存在的 PRE-N/S-N(证据绑定的锚点)" },
+        "kind": { "enum": ["assert", "judgment", "manual"] },
+        "mode": { "enum": ["vision-closed", "state-report", "replay"], "_desc": "kind=assert 时必填" },
+        "question": { "type": "string", "_desc": "vision-closed / judgment 必填,且必须是是/否封闭问题" },
+        "region": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4, "_desc": "vision-closed 必填,归一化区域" },
+        "answer": { "enum": ["yes", "no"] },
+        "path": { "type": "string", "_desc": "state-report:状态字段路径,如 player.coin" },
+        "op": {
+          "enum": ["eq", "ne", "gt", "gte", "lt", "lte", "in", "contains", "matches", "exists", "nonempty_string", "within_seconds", "unique_by"],
+          "_desc": "state-report 的比较算子"
+        },
+        "value": { "_desc": "state-report 的期望值;exists / nonempty_string 不需要" },
+        "reason": { "type": "string", "_desc": "kind=manual 必填:为什么必须人工" }
+      }
+    }
+  },
+
+  "_coverage_rules": {
+    "_desc": "由 validate_cases.py 强制执行,不通过则拒绝进入执行阶段",
+    "expectation_coverage": "每条 E-N 必须有且仅有一条 check 的 source 指向它;缺 → MISSING_EXPECTATION_COVERAGE;孤儿 → ORPHAN_CHECK",
+    "requirement_coverage": "每条 clause.id 必须在某条用例的 req_refs 里出现;缺 → MISSING_REQUIREMENT_COVERAGE",
+    "review_gate": "执行要求 review.state == approved,否则返回 blocked: not_reviewed",
+    "expect_source_legality": "expect_source 必须在枚举内;要求的 *_refs 必须非空;不该出现的 *_refs 必须为空(防把不变量伪装成需求、把配置伪装成需求)",
+    "forbidden_expect_sources": "code / observed / implementation / runtime —— 校验器硬编码拒绝。代码只回答『测哪里』,不回答『应该是什么』",
+    "determinism_warning": "有 state-report 判定但无 determinism 声明 → 警告(不阻塞)",
+    "replay_trace": "judge=replay 时 recorded_trace 必须非空",
+    "fault_rules": "fault 动作:kind 必填且在枚举内;各 kind 的必填字段齐全;after_step/around_step/target_step 必须指向存在的步骤;不应出现在 preconditions",
+    "fault_needs_state_report": "含故障注入但无任何 state-report 判定 → 警告。故障后果在界面不可见,视觉判定等于没判",
+    "pseudo_duplicate_coverage": "期望涉及重复执行类缺陷(重复支付/双倍/幂等/重投…)但无任何 fault 动作 → 警告。用『连续点击 N 次』是伪覆盖,会制造虚假信心"
+  },
+
+  "_vocabulary_rules": {
+    "_desc": "尽量用确定性规则约束模型,不要靠自觉",
+    "qunit_coverage": "每条 E-N 必须有且仅有一条 check 的 source 指向它",
+    "closed_question": "vision-closed 的 question 必须是是/否可答的封闭问题,禁止『看看有没有问题』这类开放提问",
+    "no_hardcoded_pixels": "坐标一律归一化比例(0..1);出现像素值由校验器发警告",
+    "anchor_preferred": "tap 优先用 anchor 而非 norm,跨机型更稳",
+    "no_open_question": "禁止『是否正常』『有没有问题』『是否合理』这类无法判定真假的提问"
+  }
+}

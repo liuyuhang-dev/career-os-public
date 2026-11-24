@@ -1,0 +1,35 @@
+{
+  "_comment": "故意违规:E 期望本身不可验证 —— E1 是模糊词且无数值(SPEC_VAGUE_EXPECTATION),E2 是主观手感(SPEC_SUBJECTIVE_EXPECTATION,应写成 manual 并给 reason)。这两类问题在规格层面就该提醒,否则会被写成判不了的判定项。",
+  "id": "BAD-VAGUE-C01",
+  "spec": "specs/bad4.md",
+  "title": "故意违规之四:期望不可验证",
+  "type": "device-android",
+  "priority": "P2",
+  "expect_source": "requirement",
+  "req_refs": ["R-9.9"],
+  "judge": "vision-closed",
+  "review": { "state": "draft", "by": null, "at": null, "note": null },
+  "device": { "profile": "android-mid", "resolution": [1080, 2400], "dpi": 480 },
+  "preconditions": [
+    { "id": "PRE-1", "action": "launch_host" }
+  ],
+  "steps": [
+    { "id": "S1", "action": "tap", "target": { "norm": [0.5, 0.91] } },
+    { "id": "S2", "action": "screenshot", "name": "after-battle" }
+  ],
+  "checks": [
+    {
+      "source": "E1",
+      "after": "S2",
+      "kind": "judgment",
+      "question": "战斗画面是否「流畅且良好」?"
+    },
+    {
+      "source": "E2",
+      "after": "S2",
+      "kind": "manual",
+      "reason": "打击感必须人工确认"
+    }
+  ],
+  "evidence": ["screenshot"]
+}

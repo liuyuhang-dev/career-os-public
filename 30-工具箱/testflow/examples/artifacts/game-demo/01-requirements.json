@@ -1,0 +1,27 @@
+{
+  "feature": "对局结算与弱网恢复",
+  "source": "requirements/battle-reward.md",
+  "clauses": [
+    {
+      "id": "R-3.1",
+      "text": "单局结算后金币按击杀数 × 10 发放,单局金币增量上限 500",
+      "source_ref": "requirements/battle-reward.md#L42",
+      "kind": "functional",
+      "notes": "上限 500。另有一处写「单局上限不超 500」,一致"
+    },
+    {
+      "id": "R-3.2",
+      "text": "击杀数取自对局内实际消灭的敌人数量,不含召唤物",
+      "source_ref": "requirements/battle-reward.md#L45",
+      "kind": "functional",
+      "notes": "「不含召唤物」需要客户端确认判定口径,否则击杀数会偏大"
+    },
+    {
+      "id": "R-3.3",
+      "text": "断线重连后恢复到断线前的对局状态,不得丢档或状态回退",
+      "source_ref": "requirements/weak-network.md#L18",
+      "kind": "data",
+      "notes": "未定义「重连完成」的判定信号 —— 需要客户端提供收敛完成上报,否则无法判定"
+    }
+  ]
+}

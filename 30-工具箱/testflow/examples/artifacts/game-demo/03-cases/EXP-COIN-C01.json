@@ -1,0 +1,45 @@
+{
+  "id": "EXP-COIN-C01",
+  "spec": "specs/game-demo.md",
+  "title": "探索商城购买流程中的异常",
+  "type": "device-android",
+  "priority": "P2",
+  "expect_source": "invariant",
+  "req_refs": [],
+  "judge": "explore",
+  "review": { "state": "approved", "by": "liuyuhang", "at": "2026-09-18T12:00:00+08:00", "note": "探索型用例:不判通过与否,只报异常" },
+  "device": {
+    "profile": "android-mid",
+    "resolution": [1080, 2400],
+    "dpi": 480,
+    "host": "wechat",
+    "entry": "minigame-recent",
+    "appid": "wxXXXXXXXXXXXXXXXX",
+    "render_mode": "default"
+  },
+  "determinism": { "seed": 20260917, "fixed_timestep_ms": 16, "disable_animations": false },
+  "preconditions": [
+    { "id": "PRE-1", "action": "launch_host", "host": "wechat" },
+    { "id": "PRE-2", "action": "open_entry", "entry": "minigame-recent", "appid": "wxXXXXXXXXXXXXXXXX" }
+  ],
+  "steps": [
+    { "id": "S1", "action": "tap", "target": { "anchor": { "text": "商城", "region": [0.7, 0.85, 1.0, 1.0] } } },
+    { "id": "S2", "action": "tap", "target": { "norm": [0.5, 0.55] }, "note": "随机点击商品与购买按钮" },
+    { "id": "S3", "action": "screenshot", "name": "explore-shop" }
+  ],
+  "checks": [
+    { "source": "E1", "after": "S3", "kind": "assert", "mode": "state-report", "path": "session.reconnects", "op": "eq", "value": 0 },
+    {
+      "source": "E2",
+      "after": "S3",
+      "kind": "assert",
+      "mode": "vision-closed",
+      "question": "顶部金币数值是否显示为不含「-」号且不含非数字字符的整数?",
+      "region": [0.0, 0.0, 0.4, 0.08],
+      "answer": "yes"
+    }
+  ],
+  "evidence": ["screenshot", "state_report"],
+  "recorded_trace": null,
+  "notes": "judge=explore:判定项只产出 ok/anomaly,不计入通过率、不开 bug 单。E1 在 fixture 里会失配(session.reconnects 实际为 1),用来验证异常路线确实走通而不是退化成 fail。"
+}

@@ -1,0 +1,1259 @@
+{
+  "runId": "run-20261016-184156",
+  "startedAt": "2026-10-16T18:41:56+08:00",
+  "mode": "plan-only",
+  "adb": "C:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE",
+  "stateSource": "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\game-demo_state.json",
+  "cases": [
+    {
+      "id": "REQ-SETTLE-C01",
+      "title": "结算页金币增量等于击杀数乘 10",
+      "type": "device-android",
+      "priority": "P1",
+      "expect_source": "requirement",
+      "req_refs": [
+        "R-3.1"
+      ],
+      "judge": "state-report",
+      "review_state": "approved",
+      "device": {
+        "profile": "android-mid",
+        "resolution": [
+          1080,
+          2400
+        ],
+        "dpi": 480,
+        "host": "wechat",
+        "entry": "minigame-recent",
+        "appid": "wxXXXXXXXXXXXXXXXX",
+        "render_mode": "default"
+      },
+      "network": {},
+      "determinism": {
+        "seed": 20260917,
+        "fixed_timestep_ms": 16,
+        "disable_animations": true
+      },
+      "checks": [
+        {
+          "source": "E1",
+          "after": "S3",
+          "kind": "assert",
+          "mode": "state-report",
+          "expect": {
+            "path": "player.coinDelta",
+            "op": "eq",
+            "value": 80
+          },
+          "verdict": "fail",
+          "actual": 40,
+          "evidence": [
+            "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\game-demo_state.json"
+          ]
+        },
+        {
+          "source": "E2",
+          "after": "S3",
+          "kind": "assert",
+          "mode": "state-report",
+          "expect": {
+            "path": "player.killCount",
+            "op": "eq",
+            "value": 8
+          },
+          "verdict": "pass",
+          "actual": 8,
+          "evidence": [
+            "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\game-demo_state.json"
+          ]
+        }
+      ],
+      "plan": {
+        "deviceProfile": "android-mid",
+        "devicePixels": [
+          1080,
+          2400
+        ],
+        "tapSpace": "pixels",
+        "host": "wechat",
+        "hostPackage": "com.tencent.mm",
+        "preconditions": [
+          "# PRE-1\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE shell tc qdisc del dev rmnet_data0 root",
+          "# PRE-2\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE shell monkey -p com.tencent.mm -c android.intent.category.LAUNCHER 1"
+        ],
+        "network": [],
+        "steps": [
+          "# S3\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE exec-out screencap -p > \"D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\REQ-SETTLE-C01_S3_settle.png\""
+        ],
+        "notes": [
+          "PRE-3: 打开游戏入口 entry='minigame-recent'。**adb 无法直接打开微信/抖音小游戏** —— 需要预先把游戏固定在宿主首页入口,或人工扫码。（这是真机自动化最脆弱的一环,见 references/8-platform-limits.md）",
+          "PRE-3: 已生成「宿主首页是否可见」的判定请求 —— 入口这一步必须人工配合,但**可以标出来从哪一步开始不可信**;若该请求答否,后面的步骤与证据都不算数",
+          "S1: 锚点定位需要运行时视觉确认,见判定请求",
+          "S2: 等条件而非等固定时长,需判定轮轮询"
+        ],
+        "evidenceDir": "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence"
+      },
+      "status": "planned",
+      "exploreMode": false,
+      "evidenceIndex": [
+        {
+          "step": "S3",
+          "name": "settle",
+          "path": "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\REQ-SETTLE-C01_S3_settle.png"
+        }
+      ],
+      "judgeRequests": [
+        {
+          "purpose": "wait_for",
+          "step": "PRE-3",
+          "question": "屏幕上是否已处于微信首页(可见底部导航栏)?",
+          "region": [
+            0.0,
+            0.85,
+            1.0,
+            1.0
+          ],
+          "timeout_ms": 30000,
+          "note": "入口由人工/预置方式完成后,先确认已回到宿主首页再继续;答否则后面步骤全不可信",
+          "top_level": true,
+          "caseId": "REQ-SETTLE-C01",
+          "mode": "state-report",
+          "exploreMode": false
+        },
+        {
+          "purpose": "locate_anchor",
+          "step": "S1",
+          "question": "屏幕上是否可见包含「开始游戏」字样的元素?",
+          "region": [
+            0.0,
+            0.78,
+            1.0,
+            1.0
+          ],
+          "note": "定位后按其中心 + offset 换算点击坐标",
+          "top_level": true,
+          "caseId": "REQ-SETTLE-C01",
+          "mode": "state-report",
+          "exploreMode": false
+        },
+        {
+          "purpose": "wait_for",
+          "step": "S2",
+          "question": "屏幕上是否出现包含「结算」字样的元素?",
+          "region": [
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ],
+          "timeout_ms": 180000,
+          "note": "轮询此封闭问题直到为 yes 或超时",
+          "top_level": true,
+          "caseId": "REQ-SETTLE-C01",
+          "mode": "state-report",
+          "exploreMode": false
+        }
+      ]
+    },
+    {
+      "id": "REQ-SETTLE-C02",
+      "title": "击杀数不含召唤物",
+      "type": "device-ios",
+      "priority": "P2",
+      "expect_source": "requirement",
+      "req_refs": [
+        "R-3.2"
+      ],
+      "judge": "state-report",
+      "review_state": "approved",
+      "device": {
+        "profile": "iphone-14",
+        "resolution": [
+          1170,
+          2532
+        ],
+        "dpi": 460,
+        "host": "wechat",
+        "entry": "minigame-recent",
+        "appid": "wxXXXXXXXXXXXXXXXX",
+        "render_mode": "default"
+      },
+      "network": {},
+      "determinism": {
+        "seed": 20260917,
+        "fixed_timestep_ms": 16,
+        "disable_animations": true
+      },
+      "checks": [
+        {
+          "source": "E1",
+          "kind": "assert",
+          "verdict": "skipped",
+          "actual": null,
+          "note": "executor not implemented: device-ios"
+        }
+      ],
+      "plan": {
+        "commands": [],
+        "notes": []
+      },
+      "status": "skipped",
+      "reason": "executor not implemented: device-ios"
+    },
+    {
+      "id": "REQ-NET-C01",
+      "title": "弱网断线重连后状态收敛",
+      "type": "device-android",
+      "priority": "P0",
+      "expect_source": "requirement",
+      "req_refs": [
+        "R-3.3"
+      ],
+      "judge": "state-report",
+      "review_state": "approved",
+      "device": {
+        "profile": "android-mid",
+        "resolution": [
+          1080,
+          2400
+        ],
+        "dpi": 480,
+        "host": "wechat",
+        "entry": "minigame-recent",
+        "appid": "wxXXXXXXXXXXXXXXXX",
+        "render_mode": "default"
+      },
+      "network": {
+        "profile": "weak",
+        "latency_ms": 800,
+        "jitter_ms": 300,
+        "loss_rate": 0.15,
+        "disconnect_after_ms": 5000,
+        "reconnect": true,
+        "assert_convergence": true
+      },
+      "determinism": {
+        "seed": 20260917,
+        "fixed_timestep_ms": 16,
+        "disable_animations": true
+      },
+      "checks": [
+        {
+          "source": "E1",
+          "after": "S5",
+          "kind": "assert",
+          "mode": "state-report",
+          "expect": {
+            "path": "session.state",
+            "op": "eq",
+            "value": "connected"
+          },
+          "verdict": "pass",
+          "actual": "connected",
+          "evidence": [
+            "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\game-demo_state.json"
+          ]
+        },
+        {
+          "source": "E2",
+          "after": "S5",
+          "kind": "assert",
+          "mode": "state-report",
+          "expect": {
+            "path": "pendingOps",
+            "op": "eq",
+            "value": []
+          },
+          "verdict": "pass",
+          "actual": [],
+          "evidence": [
+            "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\game-demo_state.json"
+          ]
+        },
+        {
+          "source": "E3",
+          "after": "S5",
+          "kind": "assert",
+          "mode": "state-report",
+          "expect": {
+            "path": "player.coin",
+            "op": "eq",
+            "value": 500
+          },
+          "verdict": "pass",
+          "actual": 500,
+          "evidence": [
+            "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\game-demo_state.json"
+          ]
+        }
+      ],
+      "plan": {
+        "deviceProfile": "android-mid",
+        "devicePixels": [
+          1080,
+          2400
+        ],
+        "tapSpace": "pixels",
+        "host": "wechat",
+        "hostPackage": "com.tencent.mm",
+        "preconditions": [
+          "# PRE-1\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE shell monkey -p com.tencent.mm -c android.intent.category.LAUNCHER 1"
+        ],
+        "network": [
+          "# 弱网: weak —— Android 侧精确限速(通常需 root)",
+          "C:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE shell tc qdisc add dev rmnet_data0 root netem delay 800ms 300ms loss 15%",
+          "# 收尾: C:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE shell tc qdisc del dev rmnet_data0 root"
+        ],
+        "steps": [
+          "# S3\nsleep 5",
+          "# S4\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE shell tc qdisc del dev rmnet_data0 root",
+          "# S6\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE exec-out screencap -p > \"D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\REQ-NET-C01_S6_reconnected.png\""
+        ],
+        "notes": [
+          "PRE-2: 打开游戏入口 entry='minigame-recent'。**adb 无法直接打开微信/抖音小游戏** —— 需要预先把游戏固定在宿主首页入口,或人工扫码。（这是真机自动化最脆弱的一环,见 references/8-platform-limits.md）",
+          "PRE-2: 已生成「宿主首页是否可见」的判定请求 —— 入口这一步必须人工配合,但**可以标出来从哪一步开始不可信**;若该请求答否,后面的步骤与证据都不算数",
+          "S1: 锚点定位需要运行时视觉确认,见判定请求",
+          "S2: 弱网 profile=weak 需按用例 network 块生成 tc/netem 命令;**Android 通常需 root**,网卡名需实测确认(假设 rmnet_data0)",
+          "S5: 等条件而非等固定时长,需判定轮轮询",
+          "assert_convergence=true:已生成收敛等待判定请求。注意该信号需要客户端上报(见 references/7-instrumentation.md),若未接入则相关判定只能是 blocked",
+          "证据缺口: logcat —— 声明了 logcat 证据,但动作里没有采集步骤"
+        ],
+        "evidenceDir": "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence"
+      },
+      "status": "planned",
+      "exploreMode": false,
+      "evidenceIndex": [
+        {
+          "step": "S6",
+          "name": "reconnected",
+          "path": "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\REQ-NET-C01_S6_reconnected.png"
+        }
+      ],
+      "judgeRequests": [
+        {
+          "purpose": "wait_for",
+          "step": "PRE-2",
+          "question": "屏幕上是否已处于微信首页(可见底部导航栏)?",
+          "region": [
+            0.0,
+            0.85,
+            1.0,
+            1.0
+          ],
+          "timeout_ms": 30000,
+          "note": "入口由人工/预置方式完成后,先确认已回到宿主首页再继续;答否则后面步骤全不可信",
+          "top_level": true,
+          "caseId": "REQ-NET-C01",
+          "mode": "state-report",
+          "exploreMode": false
+        },
+        {
+          "purpose": "locate_anchor",
+          "step": "S1",
+          "question": "屏幕上是否可见包含「开始游戏」字样的元素?",
+          "region": [
+            0.0,
+            0.78,
+            1.0,
+            1.0
+          ],
+          "note": "定位后按其中心 + offset 换算点击坐标",
+          "top_level": true,
+          "caseId": "REQ-NET-C01",
+          "mode": "state-report",
+          "exploreMode": false
+        },
+        {
+          "purpose": "wait_for",
+          "step": "S5",
+          "question": "屏幕上是否出现包含「重连成功」字样的提示?",
+          "region": [
+            0.0,
+            0.3,
+            1.0,
+            0.7
+          ],
+          "timeout_ms": 30000,
+          "note": "轮询此封闭问题直到为 yes 或超时",
+          "top_level": true,
+          "caseId": "REQ-NET-C01",
+          "mode": "state-report",
+          "exploreMode": false
+        },
+        {
+          "purpose": "convergence",
+          "question": "游戏是否已上报重连完成信号(session.state=connected 且 pendingOps 为空)?",
+          "note": "等到该信号出现再继续;等到超时则整条用例的相关判定应为 blocked,不能按固定时长 sleep 之后就当收敛了",
+          "top_level": true,
+          "caseId": "REQ-NET-C01",
+          "mode": "state-report",
+          "exploreMode": false
+        }
+      ],
+      "evidenceGaps": [
+        {
+          "evidence": "logcat",
+          "kind": "no_action",
+          "note": "声明了 logcat 证据,但动作里没有采集步骤"
+        }
+      ]
+    },
+    {
+      "id": "INV-COIN-C01",
+      "title": "金币余额不变负",
+      "type": "device-android",
+      "priority": "P1",
+      "expect_source": "invariant",
+      "req_refs": [],
+      "judge": "vision-closed",
+      "review_state": "approved",
+      "device": {
+        "profile": "android-mid",
+        "resolution": [
+          1080,
+          2400
+        ],
+        "dpi": 480,
+        "host": "wechat",
+        "entry": "minigame-recent",
+        "appid": "wxXXXXXXXXXXXXXXXX",
+        "render_mode": "default"
+      },
+      "network": {},
+      "determinism": {},
+      "checks": [
+        {
+          "source": "E1",
+          "after": "S3",
+          "kind": "assert",
+          "mode": "vision-closed",
+          "expect": {
+            "question": "顶部金币数值是否显示为不含「-」号且不含非数字字符的整数?",
+            "region": [
+              0.0,
+              0.0,
+              0.4,
+              0.08
+            ],
+            "answer": "yes"
+          },
+          "verdict": "pending_judgment",
+          "actual": {
+            "screenshots": [],
+            "note": "待判定轮读截图"
+          },
+          "evidence": [
+            "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\INV-COIN-C01_S3_shop-after-buy.png"
+          ]
+        },
+        {
+          "source": "E2",
+          "after": "S3",
+          "kind": "assert",
+          "mode": "vision-closed",
+          "expect": {
+            "question": "屏幕中央是否出现包含「金币不足」字样的提示?",
+            "region": [
+              0.15,
+              0.4,
+              0.85,
+              0.65
+            ],
+            "answer": "yes"
+          },
+          "verdict": "pending_judgment",
+          "actual": {
+            "screenshots": [],
+            "note": "待判定轮读截图"
+          },
+          "evidence": [
+            "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\INV-COIN-C01_S3_shop-after-buy.png"
+          ]
+        }
+      ],
+      "plan": {
+        "deviceProfile": "android-mid",
+        "devicePixels": [
+          1080,
+          2400
+        ],
+        "tapSpace": "pixels",
+        "host": "wechat",
+        "hostPackage": "com.tencent.mm",
+        "preconditions": [
+          "# PRE-1\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE shell monkey -p com.tencent.mm -c android.intent.category.LAUNCHER 1"
+        ],
+        "network": [],
+        "steps": [
+          "# S2 — 任意标价道具\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE shell input tap 540 1320",
+          "# S3\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE exec-out screencap -p > \"D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\INV-COIN-C01_S3_shop-after-buy.png\""
+        ],
+        "notes": [
+          "PRE-2: 打开游戏入口 entry='minigame-recent'。**adb 无法直接打开微信/抖音小游戏** —— 需要预先把游戏固定在宿主首页入口,或人工扫码。（这是真机自动化最脆弱的一环,见 references/8-platform-limits.md）",
+          "PRE-2: 已生成「宿主首页是否可见」的判定请求 —— 入口这一步必须人工配合,但**可以标出来从哪一步开始不可信**;若该请求答否,后面的步骤与证据都不算数",
+          "S1: 锚点定位需要运行时视觉确认,见判定请求"
+        ],
+        "evidenceDir": "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence"
+      },
+      "status": "planned",
+      "exploreMode": false,
+      "evidenceIndex": [
+        {
+          "step": "S3",
+          "name": "shop-after-buy",
+          "path": "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\INV-COIN-C01_S3_shop-after-buy.png"
+        }
+      ],
+      "judgeRequests": [
+        {
+          "purpose": "wait_for",
+          "step": "PRE-2",
+          "question": "屏幕上是否已处于微信首页(可见底部导航栏)?",
+          "region": [
+            0.0,
+            0.85,
+            1.0,
+            1.0
+          ],
+          "timeout_ms": 30000,
+          "note": "入口由人工/预置方式完成后,先确认已回到宿主首页再继续;答否则后面步骤全不可信",
+          "top_level": true,
+          "caseId": "INV-COIN-C01",
+          "mode": "vision-closed",
+          "exploreMode": false
+        },
+        {
+          "purpose": "locate_anchor",
+          "step": "S1",
+          "question": "屏幕上是否可见包含「商城」字样的元素?",
+          "region": [
+            0.7,
+            0.85,
+            1.0,
+            1.0
+          ],
+          "note": "定位后按其中心 + offset 换算点击坐标",
+          "top_level": true,
+          "caseId": "INV-COIN-C01",
+          "mode": "vision-closed",
+          "exploreMode": false
+        },
+        {
+          "purpose": "vision-closed",
+          "source": "E1",
+          "question": "顶部金币数值是否显示为不含「-」号且不含非数字字符的整数?",
+          "region": [
+            0.0,
+            0.0,
+            0.4,
+            0.08
+          ],
+          "expectedAnswer": "yes",
+          "evidenceRequired": [
+            "screenshot"
+          ],
+          "caseId": "INV-COIN-C01",
+          "mode": "vision-closed",
+          "exploreMode": false
+        },
+        {
+          "purpose": "vision-closed",
+          "source": "E2",
+          "question": "屏幕中央是否出现包含「金币不足」字样的提示?",
+          "region": [
+            0.15,
+            0.4,
+            0.85,
+            0.65
+          ],
+          "expectedAnswer": "yes",
+          "evidenceRequired": [
+            "screenshot"
+          ],
+          "caseId": "INV-COIN-C01",
+          "mode": "vision-closed",
+          "exploreMode": false
+        }
+      ]
+    },
+    {
+      "id": "INV-BAG-C01",
+      "title": "背包不出现重复条目",
+      "type": "device-android",
+      "priority": "P2",
+      "expect_source": "invariant",
+      "req_refs": [],
+      "judge": "state-report",
+      "review_state": "draft",
+      "device": {
+        "profile": "android-mid",
+        "resolution": [
+          1080,
+          2400
+        ],
+        "dpi": 480,
+        "host": "wechat",
+        "entry": "minigame-recent",
+        "appid": "wxXXXXXXXXXXXXXXXX",
+        "render_mode": "default"
+      },
+      "network": {},
+      "determinism": {},
+      "checks": [
+        {
+          "source": "E1",
+          "kind": "assert",
+          "verdict": "blocked",
+          "actual": null,
+          "note": "用例未经人工复核,不执行"
+        }
+      ],
+      "plan": {
+        "commands": [],
+        "notes": []
+      },
+      "status": "blocked",
+      "reason": "not_reviewed (review.state=draft)"
+    },
+    {
+      "id": "INV-IDEM-C01",
+      "title": "支付响应丢失后的重试不得导致重复扣款与重复发货",
+      "type": "device-android",
+      "priority": "P0",
+      "expect_source": "invariant",
+      "req_refs": [],
+      "judge": "state-report",
+      "review_state": "approved",
+      "device": {
+        "profile": "android-mid",
+        "resolution": [
+          1080,
+          2400
+        ],
+        "dpi": 480,
+        "host": "wechat",
+        "entry": "minigame-recent",
+        "appid": "wxXXXXXXXXXXXXXXXX",
+        "render_mode": "default"
+      },
+      "network": {
+        "profile": "flaky",
+        "latency_ms": 800,
+        "jitter_ms": 300,
+        "loss_rate": 0.15,
+        "reconnect": true,
+        "assert_convergence": true
+      },
+      "determinism": {
+        "seed": 20260917,
+        "fixed_timestep_ms": 16,
+        "disable_animations": true
+      },
+      "checks": [
+        {
+          "source": "E1",
+          "after": "S4",
+          "kind": "assert",
+          "mode": "state-report",
+          "expect": {
+            "path": "order.chargeCount",
+            "op": "eq",
+            "value": 1
+          },
+          "verdict": "fail",
+          "actual": 2,
+          "evidence": [
+            "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\game-demo_state.json"
+          ]
+        },
+        {
+          "source": "E2",
+          "after": "S4",
+          "kind": "assert",
+          "mode": "state-report",
+          "expect": {
+            "path": "order.coinDelta",
+            "op": "eq",
+            "value": -100
+          },
+          "verdict": "fail",
+          "actual": -200,
+          "evidence": [
+            "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\game-demo_state.json"
+          ]
+        },
+        {
+          "source": "E3",
+          "after": "S4",
+          "kind": "assert",
+          "mode": "state-report",
+          "expect": {
+            "path": "player.itemA",
+            "op": "eq",
+            "value": 1
+          },
+          "verdict": "pass",
+          "actual": 1,
+          "evidence": [
+            "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\game-demo_state.json"
+          ]
+        },
+        {
+          "source": "E4",
+          "after": "S4",
+          "kind": "assert",
+          "mode": "state-report",
+          "expect": {
+            "path": "orders",
+            "op": "unique_by",
+            "value": "orderId"
+          },
+          "verdict": "fail",
+          "actual": [
+            {
+              "orderId": "A1",
+              "status": "paid",
+              "amount": 100
+            },
+            {
+              "orderId": "A1",
+              "status": "paid",
+              "amount": 100
+            }
+          ],
+          "evidence": [
+            "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\game-demo_state.json"
+          ]
+        }
+      ],
+      "plan": {
+        "deviceProfile": "android-mid",
+        "devicePixels": [
+          1080,
+          2400
+        ],
+        "tapSpace": "pixels",
+        "host": "wechat",
+        "hostPackage": "com.tencent.mm",
+        "preconditions": [
+          "# PRE-1\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE shell monkey -p com.tencent.mm -c android.intent.category.LAUNCHER 1"
+        ],
+        "network": [
+          "# 弱网: flaky —— Android 侧精确限速(通常需 root)",
+          "C:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE shell tc qdisc add dev rmnet_data0 root netem delay 800ms 300ms loss 15%",
+          "# 收尾: C:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE shell tc qdisc del dev rmnet_data0 root"
+        ],
+        "steps": [
+          "# S1 — 点击购买测试商品\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE shell input tap 540 1320",
+          "# S3 — 等客户端超时重试与状态收敛\nsleep 5",
+          "# S4 在 S3 之后杀掉宿主,制造未确认订单重启\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE shell am force-stop com.tencent.mm",
+          "# S4 重新拉起宿主,观察是否重放\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE shell monkey -p com.tencent.mm -c android.intent.category.LAUNCHER 1",
+          "# S5\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE exec-out screencap -p > \"D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\INV-IDEM-C01_S5_after-retry.png\""
+        ],
+        "notes": [
+          "PRE-2: 打开游戏入口 entry='minigame-recent'。**adb 无法直接打开微信/抖音小游戏** —— 需要预先把游戏固定在宿主首页入口,或人工扫码。（这是真机自动化最脆弱的一环,见 references/8-platform-limits.md）",
+          "PRE-2: 已生成「宿主首页是否可见」的判定请求 —— 入口这一步必须人工配合,但**可以标出来从哪一步开始不可信**;若该请求答否,后面的步骤与证据都不算数",
+          "PRE-3: 锚点定位需要运行时视觉确认,见判定请求",
+          "S2: 故障注入 drop_response —— 请求发出后、响应到达前切断下行 —— 制造客户端重试",
+          "S2: adb 无法按请求粒度切断下行。可行手段按优先级:①游戏内网络层注入(mockNetwork,最可靠) ②代理层规则(mitmproxy/Charles 按 URL 丢包或延迟) ③设备侧 tc + iptables 按端口限时切断。**这条是本用例的核心条件,不落实则用例无效**",
+          "S2: 该故障的后果在界面上不可见,判定必须走 state-report",
+          "S4: 故障注入 kill_after_step —— 在某步之后杀掉客户端 —— 制造未确认订单重启重放",
+          "S4: 该故障的后果在界面上不可见,判定必须走 state-report",
+          "assert_convergence=true:已生成收敛等待判定请求。注意该信号需要客户端上报(见 references/7-instrumentation.md),若未接入则相关判定只能是 blocked",
+          "证据缺口: logcat —— 声明了 logcat 证据,但动作里没有采集步骤"
+        ],
+        "evidenceDir": "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence"
+      },
+      "status": "planned",
+      "exploreMode": false,
+      "evidenceIndex": [
+        {
+          "step": "S5",
+          "name": "after-retry",
+          "path": "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\INV-IDEM-C01_S5_after-retry.png"
+        }
+      ],
+      "judgeRequests": [
+        {
+          "purpose": "wait_for",
+          "step": "PRE-2",
+          "question": "屏幕上是否已处于微信首页(可见底部导航栏)?",
+          "region": [
+            0.0,
+            0.85,
+            1.0,
+            1.0
+          ],
+          "timeout_ms": 30000,
+          "note": "入口由人工/预置方式完成后,先确认已回到宿主首页再继续;答否则后面步骤全不可信",
+          "top_level": true,
+          "caseId": "INV-IDEM-C01",
+          "mode": "state-report",
+          "exploreMode": false
+        },
+        {
+          "purpose": "locate_anchor",
+          "step": "PRE-3",
+          "question": "屏幕上是否可见包含「商城」字样的元素?",
+          "region": [
+            0.7,
+            0.85,
+            1.0,
+            1.0
+          ],
+          "note": "定位后按其中心 + offset 换算点击坐标",
+          "top_level": true,
+          "caseId": "INV-IDEM-C01",
+          "mode": "state-report",
+          "exploreMode": false
+        },
+        {
+          "purpose": "convergence",
+          "question": "游戏是否已上报重连完成信号(session.state=connected 且 pendingOps 为空)?",
+          "note": "等到该信号出现再继续;等到超时则整条用例的相关判定应为 blocked,不能按固定时长 sleep 之后就当收敛了",
+          "top_level": true,
+          "caseId": "INV-IDEM-C01",
+          "mode": "state-report",
+          "exploreMode": false
+        }
+      ],
+      "evidenceGaps": [
+        {
+          "evidence": "logcat",
+          "kind": "no_action",
+          "note": "声明了 logcat 证据,但动作里没有采集步骤"
+        }
+      ]
+    },
+    {
+      "id": "EXP-COIN-C01",
+      "title": "探索商城购买流程中的异常",
+      "type": "device-android",
+      "priority": "P2",
+      "expect_source": "invariant",
+      "req_refs": [],
+      "judge": "explore",
+      "review_state": "approved",
+      "device": {
+        "profile": "android-mid",
+        "resolution": [
+          1080,
+          2400
+        ],
+        "dpi": 480,
+        "host": "wechat",
+        "entry": "minigame-recent",
+        "appid": "wxXXXXXXXXXXXXXXXX",
+        "render_mode": "default"
+      },
+      "network": {},
+      "determinism": {
+        "seed": 20260917,
+        "fixed_timestep_ms": 16,
+        "disable_animations": false
+      },
+      "checks": [
+        {
+          "source": "E1",
+          "after": "S3",
+          "kind": "assert",
+          "mode": "state-report",
+          "expect": {
+            "path": "session.reconnects",
+            "op": "eq",
+            "value": 0
+          },
+          "verdict": "anomaly",
+          "actual": 1,
+          "evidence": [
+            "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\game-demo_state.json"
+          ]
+        },
+        {
+          "source": "E2",
+          "after": "S3",
+          "kind": "assert",
+          "mode": "vision-closed",
+          "expect": {
+            "question": "顶部金币数值是否显示为不含「-」号且不含非数字字符的整数?",
+            "region": [
+              0.0,
+              0.0,
+              0.4,
+              0.08
+            ],
+            "answer": "yes"
+          },
+          "verdict": "pending_judgment",
+          "actual": {
+            "screenshots": [],
+            "note": "待判定轮读截图"
+          },
+          "evidence": [
+            "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\EXP-COIN-C01_S3_explore-shop.png"
+          ]
+        }
+      ],
+      "plan": {
+        "deviceProfile": "android-mid",
+        "devicePixels": [
+          1080,
+          2400
+        ],
+        "tapSpace": "pixels",
+        "host": "wechat",
+        "hostPackage": "com.tencent.mm",
+        "preconditions": [
+          "# PRE-1\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE shell monkey -p com.tencent.mm -c android.intent.category.LAUNCHER 1"
+        ],
+        "network": [],
+        "steps": [
+          "# S2 — 随机点击商品与购买按钮\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE shell input tap 540 1320",
+          "# S3\nC:\\Users\\a‘\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.EXE exec-out screencap -p > \"D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\EXP-COIN-C01_S3_explore-shop.png\""
+        ],
+        "notes": [
+          "PRE-2: 打开游戏入口 entry='minigame-recent'。**adb 无法直接打开微信/抖音小游戏** —— 需要预先把游戏固定在宿主首页入口,或人工扫码。（这是真机自动化最脆弱的一环,见 references/8-platform-limits.md）",
+          "PRE-2: 已生成「宿主首页是否可见」的判定请求 —— 入口这一步必须人工配合,但**可以标出来从哪一步开始不可信**;若该请求答否,后面的步骤与证据都不算数",
+          "S1: 锚点定位需要运行时视觉确认,见判定请求"
+        ],
+        "evidenceDir": "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence"
+      },
+      "status": "planned",
+      "exploreMode": true,
+      "evidenceIndex": [
+        {
+          "step": "S3",
+          "name": "explore-shop",
+          "path": "D:\\迁移归档\\05_Documents\\New project\\.agents\\skills\\testflow\\examples\\artifacts\\game-demo\\04-runs\\evidence\\EXP-COIN-C01_S3_explore-shop.png"
+        }
+      ],
+      "judgeRequests": [
+        {
+          "purpose": "wait_for",
+          "step": "PRE-2",
+          "question": "屏幕上是否已处于微信首页(可见底部导航栏)?",
+          "region": [
+            0.0,
+            0.85,
+            1.0,
+            1.0
+          ],
+          "timeout_ms": 30000,
+          "note": "入口由人工/预置方式完成后,先确认已回到宿主首页再继续;答否则后面步骤全不可信",
+          "top_level": true,
+          "caseId": "EXP-COIN-C01",
+          "mode": "explore",
+          "exploreMode": true
+        },
+        {
+          "purpose": "locate_anchor",
+          "step": "S1",
+          "question": "屏幕上是否可见包含「商城」字样的元素?",
+          "region": [
+            0.7,
+            0.85,
+            1.0,
+            1.0
+          ],
+          "note": "定位后按其中心 + offset 换算点击坐标",
+          "top_level": true,
+          "caseId": "EXP-COIN-C01",
+          "mode": "explore",
+          "exploreMode": true
+        },
+        {
+          "purpose": "vision-closed",
+          "source": "E2",
+          "question": "顶部金币数值是否显示为不含「-」号且不含非数字字符的整数?",
+          "region": [
+            0.0,
+            0.0,
+            0.4,
+            0.08
+          ],
+          "expectedAnswer": "yes",
+          "evidenceRequired": [
+            "screenshot"
+          ],
+          "caseId": "EXP-COIN-C01",
+          "mode": "explore",
+          "exploreMode": true
+        }
+      ]
+    }
+  ],
+  "judgeRequests": [
+    {
+      "purpose": "wait_for",
+      "step": "PRE-3",
+      "question": "屏幕上是否已处于微信首页(可见底部导航栏)?",
+      "region": [
+        0.0,
+        0.85,
+        1.0,
+        1.0
+      ],
+      "timeout_ms": 30000,
+      "note": "入口由人工/预置方式完成后,先确认已回到宿主首页再继续;答否则后面步骤全不可信",
+      "top_level": true,
+      "caseId": "REQ-SETTLE-C01",
+      "mode": "state-report",
+      "exploreMode": false
+    },
+    {
+      "purpose": "locate_anchor",
+      "step": "S1",
+      "question": "屏幕上是否可见包含「开始游戏」字样的元素?",
+      "region": [
+        0.0,
+        0.78,
+        1.0,
+        1.0
+      ],
+      "note": "定位后按其中心 + offset 换算点击坐标",
+      "top_level": true,
+      "caseId": "REQ-SETTLE-C01",
+      "mode": "state-report",
+      "exploreMode": false
+    },
+    {
+      "purpose": "wait_for",
+      "step": "S2",
+      "question": "屏幕上是否出现包含「结算」字样的元素?",
+      "region": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "timeout_ms": 180000,
+      "note": "轮询此封闭问题直到为 yes 或超时",
+      "top_level": true,
+      "caseId": "REQ-SETTLE-C01",
+      "mode": "state-report",
+      "exploreMode": false
+    },
+    {
+      "purpose": "wait_for",
+      "step": "PRE-2",
+      "question": "屏幕上是否已处于微信首页(可见底部导航栏)?",
+      "region": [
+        0.0,
+        0.85,
+        1.0,
+        1.0
+      ],
+      "timeout_ms": 30000,
+      "note": "入口由人工/预置方式完成后,先确认已回到宿主首页再继续;答否则后面步骤全不可信",
+      "top_level": true,
+      "caseId": "REQ-NET-C01",
+      "mode": "state-report",
+      "exploreMode": false
+    },
+    {
+      "purpose": "locate_anchor",
+      "step": "S1",
+      "question": "屏幕上是否可见包含「开始游戏」字样的元素?",
+      "region": [
+        0.0,
+        0.78,
+        1.0,
+        1.0
+      ],
+      "note": "定位后按其中心 + offset 换算点击坐标",
+      "top_level": true,
+      "caseId": "REQ-NET-C01",
+      "mode": "state-report",
+      "exploreMode": false
+    },
+    {
+      "purpose": "wait_for",
+      "step": "S5",
+      "question": "屏幕上是否出现包含「重连成功」字样的提示?",
+      "region": [
+        0.0,
+        0.3,
+        1.0,
+        0.7
+      ],
+      "timeout_ms": 30000,
+      "note": "轮询此封闭问题直到为 yes 或超时",
+      "top_level": true,
+      "caseId": "REQ-NET-C01",
+      "mode": "state-report",
+      "exploreMode": false
+    },
+    {
+      "purpose": "convergence",
+      "question": "游戏是否已上报重连完成信号(session.state=connected 且 pendingOps 为空)?",
+      "note": "等到该信号出现再继续;等到超时则整条用例的相关判定应为 blocked,不能按固定时长 sleep 之后就当收敛了",
+      "top_level": true,
+      "caseId": "REQ-NET-C01",
+      "mode": "state-report",
+      "exploreMode": false
+    },
+    {
+      "purpose": "wait_for",
+      "step": "PRE-2",
+      "question": "屏幕上是否已处于微信首页(可见底部导航栏)?",
+      "region": [
+        0.0,
+        0.85,
+        1.0,
+        1.0
+      ],
+      "timeout_ms": 30000,
+      "note": "入口由人工/预置方式完成后,先确认已回到宿主首页再继续;答否则后面步骤全不可信",
+      "top_level": true,
+      "caseId": "INV-COIN-C01",
+      "mode": "vision-closed",
+      "exploreMode": false
+    },
+    {
+      "purpose": "locate_anchor",
+      "step": "S1",
+      "question": "屏幕上是否可见包含「商城」字样的元素?",
+      "region": [
+        0.7,
+        0.85,
+        1.0,
+        1.0
+      ],
+      "note": "定位后按其中心 + offset 换算点击坐标",
+      "top_level": true,
+      "caseId": "INV-COIN-C01",
+      "mode": "vision-closed",
+      "exploreMode": false
+    },
+    {
+      "purpose": "vision-closed",
+      "source": "E1",
+      "question": "顶部金币数值是否显示为不含「-」号且不含非数字字符的整数?",
+      "region": [
+        0.0,
+        0.0,
+        0.4,
+        0.08
+      ],
+      "expectedAnswer": "yes",
+      "evidenceRequired": [
+        "screenshot"
+      ],
+      "caseId": "INV-COIN-C01",
+      "mode": "vision-closed",
+      "exploreMode": false
+    },
+    {
+      "purpose": "vision-closed",
+      "source": "E2",
+      "question": "屏幕中央是否出现包含「金币不足」字样的提示?",
+      "region": [
+        0.15,
+        0.4,
+        0.85,
+        0.65
+      ],
+      "expectedAnswer": "yes",
+      "evidenceRequired": [
+        "screenshot"
+      ],
+      "caseId": "INV-COIN-C01",
+      "mode": "vision-closed",
+      "exploreMode": false
+    },
+    {
+      "purpose": "wait_for",
+      "step": "PRE-2",
+      "question": "屏幕上是否已处于微信首页(可见底部导航栏)?",
+      "region": [
+        0.0,
+        0.85,
+        1.0,
+        1.0
+      ],
+      "timeout_ms": 30000,
+      "note": "入口由人工/预置方式完成后,先确认已回到宿主首页再继续;答否则后面步骤全不可信",
+      "top_level": true,
+      "caseId": "INV-IDEM-C01",
+      "mode": "state-report",
+      "exploreMode": false
+    },
+    {
+      "purpose": "locate_anchor",
+      "step": "PRE-3",
+      "question": "屏幕上是否可见包含「商城」字样的元素?",
+      "region": [
+        0.7,
+        0.85,
+        1.0,
+        1.0
+      ],
+      "note": "定位后按其中心 + offset 换算点击坐标",
+      "top_level": true,
+      "caseId": "INV-IDEM-C01",
+      "mode": "state-report",
+      "exploreMode": false
+    },
+    {
+      "purpose": "convergence",
+      "question": "游戏是否已上报重连完成信号(session.state=connected 且 pendingOps 为空)?",
+      "note": "等到该信号出现再继续;等到超时则整条用例的相关判定应为 blocked,不能按固定时长 sleep 之后就当收敛了",
+      "top_level": true,
+      "caseId": "INV-IDEM-C01",
+      "mode": "state-report",
+      "exploreMode": false
+    },
+    {
+      "purpose": "wait_for",
+      "step": "PRE-2",
+      "question": "屏幕上是否已处于微信首页(可见底部导航栏)?",
+      "region": [
+        0.0,
+        0.85,
+        1.0,
+        1.0
+      ],
+      "timeout_ms": 30000,
+      "note": "入口由人工/预置方式完成后,先确认已回到宿主首页再继续;答否则后面步骤全不可信",
+      "top_level": true,
+      "caseId": "EXP-COIN-C01",
+      "mode": "explore",
+      "exploreMode": true
+    },
+    {
+      "purpose": "locate_anchor",
+      "step": "S1",
+      "question": "屏幕上是否可见包含「商城」字样的元素?",
+      "region": [
+        0.7,
+        0.85,
+        1.0,
+        1.0
+      ],
+      "note": "定位后按其中心 + offset 换算点击坐标",
+      "top_level": true,
+      "caseId": "EXP-COIN-C01",
+      "mode": "explore",
+      "exploreMode": true
+    },
+    {
+      "purpose": "vision-closed",
+      "source": "E2",
+      "question": "顶部金币数值是否显示为不含「-」号且不含非数字字符的整数?",
+      "region": [
+        0.0,
+        0.0,
+        0.4,
+        0.08
+      ],
+      "expectedAnswer": "yes",
+      "evidenceRequired": [
+        "screenshot"
+      ],
+      "caseId": "EXP-COIN-C01",
+      "mode": "explore",
+      "exploreMode": true
+    }
+  ],
+  "note": "执行者只产出 actual 与判定请求,不产出通过与否。vision-closed / judgment 必须由独立的判定轮完成。"
+}
